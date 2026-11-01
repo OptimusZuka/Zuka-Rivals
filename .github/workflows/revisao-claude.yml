@@ -1,0 +1,26 @@
+name: Revisao com agente (opcional)
+
+# So corre se existir o segredo ANTHROPIC_API_KEY no repositorio (Settings > Secrets and variables > Actions).
+# Usa o agente definido em .claude/agents/revisor-zuka-rivals.md.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    env:
+      TEM_CHAVE: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+    steps:
+      - uses: actions/checkout@v4
+        if: env.TEM_CHAVE == 'true'
+      - uses: anthropics/claude-code-action@v1
+        if: env.TEM_CHAVE == 'true'
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: >
+            Usa o agente revisor-zuka-rivals para rever este pull request: seguranca, gatilhos de falso positivo
+            em antivirus e simplificacao. Responde em portugues do Brasil, com a tabela por gravidade.

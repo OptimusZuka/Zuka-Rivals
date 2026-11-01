@@ -38,18 +38,13 @@ public partial class MainWindow
         }
     }
 
-    /// <summary>Procura o executar.bat subindo a partir da pasta do programa.</summary>
+    /// <summary>Caminho do proprio executavel instalado (ZukaRivals.exe).</summary>
     private static string? FindLauncher()
     {
-        string? dir = AppContext.BaseDirectory;
-        for (int i = 0; i < 8 && !string.IsNullOrEmpty(dir); i++)
-        {
-            string vbs = Path.Combine(dir, "launcher.vbs");
-            if (File.Exists(vbs)) return vbs;
-            string candidate = Path.Combine(dir, "executar.bat");
-            if (File.Exists(candidate)) return candidate;
-            dir = Directory.GetParent(dir)?.FullName;
-        }
+        string? exe = Environment.ProcessPath;
+        if (exe != null && File.Exists(exe)
+            && !Path.GetFileName(exe).Equals("dotnet.exe", StringComparison.OrdinalIgnoreCase))
+            return exe;
         return null;
     }
 
@@ -71,9 +66,7 @@ public partial class MainWindow
                     _loading = false;
                     return;
                 }
-                key.SetValue(RunValueName, launcher.EndsWith(".vbs", StringComparison.OrdinalIgnoreCase)
-                    ? "wscript.exe \"" + launcher + "\""
-                    : "cmd.exe /c start \"\" /min \"" + launcher + "\"");
+                key.SetValue(RunValueName, "\"" + launcher + "\"");
                 Toast(Loc.T("as_on"));
             }
             else

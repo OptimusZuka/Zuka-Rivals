@@ -6,11 +6,29 @@
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>IRacingTracker</AssemblyName>
+    <AssemblyName>ZukaRivals</AssemblyName>
     <RootNamespace>IRacingTracker</RootNamespace>
-    <!-- Sem .exe solto: o Controlo Inteligente de Aplicações bloqueia-o. Corre através do dotnet.exe (assinado pela Microsoft). -->
-    <UseAppHost>false</UseAppHost>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+
+    <!-- Informacao visivel em Propriedades > Detalhes (ajuda o Windows e os antivirus a identificar o programa) -->
+    <Product>Zuka Rivals</Product>
+    <Company>Zuka</Company>
+    <Authors>Zuka</Authors>
+    <Description>Overlay para iRacing com historico de pilotos</Description>
+    <Copyright>Copyright (c) 2026 Zuka</Copyright>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <NeutralLanguage>pt-PT</NeutralLanguage>
+
+    <!-- Publicacao: win-x64, com o .NET incluido (o utilizador nao instala nada), sem ofuscacao nem compressao de executavel -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>false</PublishSingleFile>
+    <PublishTrimmed>false</PublishTrimmed>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <DebugType>none</DebugType>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <ItemGroup>

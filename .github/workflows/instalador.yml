@@ -1,0 +1,86 @@
+name: Instalador
+
+# Gera ZukaRivals.exe (com o .NET incluido) e o instalador ZukaRivals-Setup.exe numa maquina Windows limpa do GitHub.
+# Corre ao criar uma etiqueta v* ou manualmente (Actions > Instalador > Run workflow).
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  construir:
+    runs-on: windows-latest
+    env:
+      SIGN_PFX_BASE64: ${{ secrets.SIGN_PFX_BASE64 }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Verificacao de seguranca (padroes de antivirus)
+        shell: bash
+        run: bash scripts/verificar.sh
+
+      - name: Publicar (win-x64, com .NET incluido)
+        run: dotnet publish IRacingTracker.csproj -c Release -o publish --nologo
+
+      - name: Instalar Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Criar instalador
+        shell: pwsh
+        run: |
+          $v = "${{ github.ref_name }}".TrimStart('v')
+          if (-not $v -or $v -eq 'main') { $v = '1.0.0' }
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "installer\ZukaRivals.iss" "/DAppVersion=$v"
+
+      # Assinatura Authenticode: so corre se guardares o certificado como segredos do repositorio
+      # (SIGN_PFX_BASE64 e SIGN_PFX_PASSWORD). Sem certificado, este passo e ignorado e o instalador fica sem assinatura.
+      - name: Assinar (opcional)
+        if: ${{ env.SIGN_PFX_BASE64 != '' }}
+        shell: pwsh
+        env:
+          SIGN_PFX_PASSWORD: ${{ secrets.SIGN_PFX_PASSWORD }}
+        run: |
+          [IO.File]::WriteAllBytes("cert.pfx", [Convert]::FromBase64String($env:SIGN_PFX_BASE64))
+          $signtool = (Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe" | Sort-Object FullName | Select-Object -Last 1).FullName
+          Get-ChildItem Output\*.exe, publish\ZukaRivals.exe | ForEach-Object {
+            & $signtool sign /f cert.pfx /p $env:SIGN_PFX_PASSWORD /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 $_.FullName
+          }
+          Remove-Item cert.pfx
+
+      - name: Analise do Windows Defender
+        shell: pwsh
+        run: |
+          $mp = "$env:ProgramFiles\Windows Defender\MpCmdRun.exe"
+          if (-not (Test-Path $mp)) { Write-Host "Defender indisponivel neste executor; analise ignorada."; exit 0 }
+          Get-ChildItem Output\*.exe | ForEach-Object {
+            & $mp -Scan -ScanType 3 -File $_.FullName -DisableRemediation
+            Write-Host "$($_.Name): codigo de saida $LASTEXITCODE (0 = limpo)"
+            if ($LASTEXITCODE -eq 2) { throw "O Defender detetou algo em $($_.Name)" }
+          }
+
+      - name: Somas SHA-256
+        shell: pwsh
+        run: |
+          Get-FileHash Output\*.exe -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $(Split-Path $_.Path -Leaf)" } | Tee-Object -FilePath Output\SHA256.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ZukaRivals-Setup
+          path: Output/*
+
+      - name: Anexar a release (so em etiquetas)
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" Output/* --title "Zuka Rivals ${{ github.ref_name }}" \
+            --notes "Instalador e somas SHA-256. Podes enviar o Setup ao VirusTotal antes de instalar." || \
+          gh release upload "${{ github.ref_name }}" Output/* --clobber

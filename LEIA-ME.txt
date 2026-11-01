@@ -5,11 +5,15 @@ PARA QUE SERVE
 Painel por cima do iRacing que mostra os pilotos da sessao (posicao ao vivo, classe, iRating, licenca,
 voltas, gap, melhor volta, pneu) e guarda o historico: contra quem ja corrias, tags e notas por piloto.
 
-INSTALAR (1a vez)
-Duplo clique em instalar.bat. Ele verifica o .NET 10 (instala-o com o winget se faltar), instala o programa em
-%LocalAppData%\ZukaRivals e cria o atalho "Zuka Rivals" na Area de Trabalho e no Menu Iniciar.
-Depois disso podes apagar a pasta que descarregaste. Para atualizar, corre o instalar.bat da versao nova.
-Nao precisa de desativar nada no Windows. (executar.bat serve so para correr direto da pasta, sem instalar.)
+INSTALAR
+Executa ZukaRivals-Setup-1.0.0.exe e segue o assistente: escolhe a pasta, e se queres atalho no ambiente de trabalho.
+O instalador cria a entrada "Zuka Rivals" no menu Iniciar e em Definicoes > Aplicacoes, e inclui tudo o que o programa
+precisa (nao instales nada a parte). Nao pede administrador por defeito.
+Desinstalar: Definicoes do Windows > Aplicacoes > Zuka Rivals > Desinstalar. No fim pergunta se tambem apagas o
+historico, as tags e as definicoes.
+AVISO: o instalador ainda nao tem assinatura digital paga. O Windows pode mostrar "Windows protegeu o seu PC" ou
+"editor desconhecido": escolhe "Mais informacoes" > "Executar mesmo assim". Podes confirmar o arquivo com o SHA256.txt
+ou no VirusTotal. Ver SECURITY.md.
 
 USO DIARIO
   - Ctrl+Alt+O  mostra/oculta o painel.   Ctrl+Alt+C  liga/desliga o click-through (o rato passa para o jogo).

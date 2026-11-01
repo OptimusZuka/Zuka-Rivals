@@ -173,7 +173,7 @@ internal static class Strings
         ("bk_imported", "Backup importado: {0}", "Backup imported: {0}", "Copia importada: {0}", "Sauvegarde importée : {0}"),
         ("bk_err_import", "Erro a importar: {0}", "Import error: {0}", "Error al importar: {0}", "Erreur d'importation : {0}"),
         ("bk_err_folder", "Não consegui abrir a pasta: {0}", "Couldn't open the folder: {0}", "No pude abrir la carpeta: {0}", "Impossible d'ouvrir le dossier : {0}"),
-        ("as_nolauncher", "Não encontrei o executar.bat. Abre o programa a partir da pasta onde o extraíste.", "Couldn't find executar.bat. Open the program from the folder where you extracted it.", "No encontré executar.bat. Abre el programa desde la carpeta donde lo extrajiste.", "executar.bat introuvable. Ouvrez le programme depuis le dossier où vous l'avez extrait."),
+        ("as_nolauncher", "Não consegui localizar o programa instalado. Instala-o com o instalador e tenta de novo.", "Couldn't locate the installed program. Install it with the installer and try again.", "No pude localizar el programa instalado. Instálalo con el instalador e inténtalo de nuevo.", "Impossible de localiser le programme installé. Installez-le avec l'installateur et réessayez."),
         ("as_on", "Vai arrancar com o Windows (numa janela minimizada).", "It will start with Windows (in a minimized window).", "Se iniciará con Windows (en una ventana minimizada).", "Il démarrera avec Windows (dans une fenêtre réduite)."),
         ("as_off", "Já não arranca com o Windows.", "It no longer starts with Windows.", "Ya no se inicia con Windows.", "Il ne démarre plus avec Windows."),
         ("err_generic", "Erro: {0}", "Error: {0}", "Error: {0}", "Erreur : {0}"),
