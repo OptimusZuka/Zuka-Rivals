@@ -325,8 +325,14 @@ public partial class MainWindow : Window
         }
     }
 
+    private DateTime? _endedAt;
+    private DateTime _lastH2hSave = DateTime.MinValue;
+    private string? _radarText;
+
     private void ResetSessionState()
     {
+        _endedAt = null;
+        _radarText = null;
         _yamlRef = null;
         _session = new ParsedSession();
         _known = new Dictionary<int, int>();
@@ -559,7 +565,15 @@ public partial class MainWindow : Window
         bool ours = ComputeOrder(active, mode, state, sessionTime, pct, lapsDone, bestLap, surface,
                                  _posMap, _clsMap, _classBest);
 
+        // Fim da corrida: a lista fica congelada (quem sai continua la), ate ao tempo limite opcional
+        if (state >= 5) { _endedAt ??= DateTime.UtcNow; } else { _endedAt = null; }
+        bool frozen = _settings.KeepAfterRace && _endedAt != null
+                      && !(_settings.RemoveAfterMin > 0 && (DateTime.UtcNow - _endedAt.Value).TotalMinutes >= _settings.RemoveAfterMin);
+
         // ---- linhas da tabela ----
+        string? radarText = null;
+        double radarBest = double.MaxValue;
+        var h2hNow = new List<KeyValuePair<int, bool>>();
         var wanted = new List<RowVm>();
         var seen = new HashSet<int>();
         foreach (var d in active)
@@ -569,7 +583,18 @@ public partial class MainWindow : Window
             // Carros nos boxes (ou fora do mundo) nao aparecem; a tua linha aparece sempre
             int surf = AtOr(surface, d.CarIdx, 3);
             bool inPit = onPit != null && d.CarIdx < onPit.Length && onPit[d.CarIdx];
-            bool hide = !isMe && (surf < 0 || (_settings.HidePitCars && (inPit || surf == 1 || surf == 2)));
+            if (frozen && !isMe && surf < 0)
+            {
+                // ja saiu do mundo: mantem a linha como estava (mais escura); se nunca a mostrei, nao aparece
+                if (_rowByCar.TryGetValue(d.CarIdx, out RowVm? kept))
+                {
+                    kept.RowOpacity = 0.5;
+                    wanted.Add(kept);
+                    seen.Add(d.CarIdx);
+                }
+                continue;
+            }
+            bool hide = !isMe && !frozen && (surf < 0 || (_settings.HidePitCars && (inPit || surf == 1 || surf == 2)));
             if (!StableVisible(d.CarIdx, !hide)) continue;
 
             if (!_rowByCar.TryGetValue(d.CarIdx, out RowVm? r))
@@ -586,6 +611,7 @@ public partial class MainWindow : Window
             // + = esta a frente de ti na pista, - = esta atras. Usa a distancia na pista (nunca mais de meia volta).
             // A frente: tempo que tu demoras a chegar la (o teu ritmo). Atras: tempo que ele demora a chegar a ti (ritmo dele).
             string gapText = "-";
+            double gapVal = double.NaN;
             float other = AtFOr(pct, d.CarIdx, -1f);
             if (!isMe && myPct >= 0f && other >= 0f)
             {
@@ -594,7 +620,10 @@ public partial class MainWindow : Window
                 else if (dp < -0.5) dp += 1.0;
                 double lap = dp >= 0 ? myLap : (d.EstLapTime > 0 ? d.EstLapTime : myLap);
                 if (lap > 0)
-                    gapText = (dp * lap).ToString("+0.0;-0.0;0.0", CultureInfo.InvariantCulture);
+                {
+                    gapVal = dp * lap;
+                    gapText = gapVal.ToString("+0.0;-0.0;0.0", CultureInfo.InvariantCulture);
+                }
             }
 
             // Posicao: ao vivo (corrida) ou pela melhor volta (treino/qualificacao); senao a do iRacing
@@ -662,6 +691,30 @@ public partial class MainWindow : Window
             r.Gap = gapText;
             r.SetTags(TagsFor(d.UserId));
             r.RowBg = isMe ? MeRowBrush() : _idleBrush;
+            r.RowOpacity = 1.0;
+
+            // Radar de perigo: tag Sujo / Agressivo / Imprevisivel perto de ti (so com a corrida/sessao em andamento)
+            if (_settings.RadarOn && !isMe && !frozen && !double.IsNaN(gapVal) && Math.Abs(gapVal) <= _settings.RadarSeconds
+                && surf == 3 && TagsFor(d.UserId).Any(t => t.IconKey == "skull" || t.IconKey == "bolt" || t.IconKey == "warning"))
+            {
+                r.RowBg = BrushCache.Argb(0x55, 0xF8, 0x51, 0x49);
+                if (Math.Abs(gapVal) < radarBest)
+                {
+                    radarBest = Math.Abs(gapVal);
+                    radarText = Loc.T(gapVal >= 0 ? "radar_ahead" : "radar_behind", ShortName(d.DisplayName),
+                                      Math.Abs(gapVal).ToString("0.0", CultureInfo.InvariantCulture));
+                }
+            }
+
+            // Confronto direto: quem acabou a frente (so corrida oficial, depois da bandeira)
+            if (state >= 5 && !isMe && d.UserId > 0 && p > 0 && At(pos, _session.DriverCarIdx) > 0)
+            {
+                int myP = At(pos, _session.DriverCarIdx);
+                int myCp = At(cpos, _session.DriverCarIdx);
+                bool sameClass = d.CarClassId == myClass && cp > 0 && myCp > 0;
+                bool iAhead = sameClass ? myCp < cp : myP < p;
+                h2hNow.Add(new KeyValuePair<int, bool>(d.UserId, iAhead));
+            }
 
             if (isMe)
             {
@@ -705,6 +758,12 @@ public partial class MainWindow : Window
         foreach (int k in seen) _lastSeen[k] = nowT;
         foreach (int idx in _rowByCar.Keys.Where(k => !seen.Contains(k)).ToList())
         {
+            if (frozen)
+            {
+                _rowByCar[idx].RowOpacity = 0.5;
+                if (!wanted.Contains(_rowByCar[idx])) wanted.Add(_rowByCar[idx]);
+                continue;
+            }
             // quem sai da sessao fica mais 2 s (a nao ser que seja o filtro a esconder): evita piscar
             if (!FilterActive && !active.Any(x => x.CarIdx == idx) && _lastSeen.TryGetValue(idx, out DateTime ls) && (nowT - ls).TotalSeconds < 2.0)
             {
@@ -767,6 +826,15 @@ public partial class MainWindow : Window
             _recordedThisSession += _history.RecordEncounters(ctx, _session.Drivers, testMode);
             _needRecord = false;
         }
+
+        if (_history != null && real && state >= 5 && !replay && h2hNow.Count > 0
+            && (DateTime.UtcNow - _lastH2hSave).TotalSeconds >= 5)
+        {
+            _lastH2hSave = DateTime.UtcNow;
+            try { _history.SaveHeadToHead(_subId, h2hNow); }
+            catch (Exception ex) { AppPaths.Log("h2h: " + ex.Message); }
+        }
+        _radarText = radarText;
 
         SetInfo(sType + (_session.Official ? Loc.T("info_official") : Loc.T("info_unofficial")),
                 _session.TrackName,
@@ -876,6 +944,9 @@ public partial class MainWindow : Window
         try
         {
             DriverHistory h = _history.GetHistory(d.UserId, _subId, _settings.TestMode);
+            var h2h = _history.GetHeadToHead(d.UserId, _subId);
+            if (h2h.Ahead + h2h.Behind > 0)
+                sb.AppendLine(Loc.T("det_h2h", h2h.Ahead, h2h.Behind));
             if (h.Count == 0)
             {
                 sb.AppendLine(Loc.T("det_none"));

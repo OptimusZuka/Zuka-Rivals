@@ -21,6 +21,8 @@ public partial class MainWindow
 
         TopmostCheck.IsChecked = _settings.AlwaysOnTop;
         HidePitCheck.IsChecked = _settings.HidePitCars;
+        KeepAfterRaceCheck.IsChecked = _settings.KeepAfterRace;
+        RadarCheck.IsChecked = _settings.RadarOn;
         CenterCheck.IsChecked = _settings.AutoCenter;
         AutoBackupCheck.IsChecked = _settings.AutoBackup;
         OnlyConnectedCheck.IsChecked = _settings.OnlyWhenConnected;
@@ -95,6 +97,8 @@ public partial class MainWindow
         if (_loading) return;
         _settings.AlwaysOnTop = TopmostCheck.IsChecked == true;
         _settings.HidePitCars = HidePitCheck.IsChecked == true;
+        _settings.KeepAfterRace = KeepAfterRaceCheck.IsChecked == true;
+        _settings.RadarOn = RadarCheck.IsChecked == true;
         _settings.AutoCenter = CenterCheck.IsChecked == true;
         _settings.AutoBackup = AutoBackupCheck.IsChecked == true;
         _settings.OnlyWhenConnected = OnlyConnectedCheck.IsChecked == true;

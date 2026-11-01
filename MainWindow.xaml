@@ -273,7 +273,7 @@
                     <ItemsControl x:Name="RowsList" Focusable="False">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Background="{Binding RowBg}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,0,1"
+                                <Border Background="{Binding RowBg}" Opacity="{Binding RowOpacity}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,0,1"
                                         CornerRadius="{DynamicResource RowCorner}" Margin="{DynamicResource RowMargin}" Cursor="Hand" MouseLeftButtonUp="Row_MouseLeftButtonUp" MouseRightButtonUp="Row_MouseRightButtonUp">
                                     <Grid Height="{DynamicResource RowH}">
                                         <Grid.ColumnDefinitions>
@@ -557,6 +557,8 @@
                                     <WrapPanel Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,8">
                                         <CheckBox x:Name="TopmostCheck" Content="{loc:Tr chk_topmost}" Checked="Option_Changed" Unchecked="Option_Changed" />
                                         <CheckBox x:Name="HidePitCheck" Content="{loc:Tr chk_hidepit}" Checked="Option_Changed" Unchecked="Option_Changed" />
+                                        <CheckBox x:Name="KeepAfterRaceCheck" Content="{loc:Tr chk_keeprace}" ToolTip="{loc:Tr tip_keeprace}" Checked="Option_Changed" Unchecked="Option_Changed" />
+                                        <CheckBox x:Name="RadarCheck" Content="{loc:Tr chk_radar}" ToolTip="{loc:Tr tip_radar}" Checked="Option_Changed" Unchecked="Option_Changed" />
                                         <CheckBox x:Name="CenterCheck" Content="{loc:Tr chk_center}" Checked="Option_Changed" Unchecked="Option_Changed" />
                                         <CheckBox x:Name="OnlyConnectedCheck" Content="{loc:Tr chk_onlyconn}" Checked="Option_Changed" Unchecked="Option_Changed"
                                                   ToolTip="{loc:Tr tip_onlyconn}" />

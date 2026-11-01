@@ -1,7 +1,7 @@
 ; Zuka Rivals - instalador (Inno Setup 6). Compilar com:  iscc installer\ZukaRivals.iss /DAppVersion=1.0.0
 ; Espera a pasta "publish" (dotnet publish -c Release -o publish) na raiz do repositorio.
 #ifndef AppVersion
-  #define AppVersion "1.0.0"
+  #define AppVersion "1.1.0"
 #endif
 #define AppName "Zuka Rivals"
 #define AppExe  "ZukaRivals.exe"
@@ -52,6 +52,31 @@ Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; Tasks: desktopico
 Filename: "{app}\{#AppExe}"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags: nowait postinstall skipifsilent
 
 [Code]
+// Instalacao normal (sem administrador) nao pode escrever em "Program Files". Em vez de falhar no fim com
+// "sem permissao", avisa logo na escolha da pasta e diz o que fazer.
+function NextButtonClick(CurPageID: Integer): Boolean;
+var
+  Dir: string;
+begin
+  Result := True;
+  if (CurPageID = wpSelectDir) and (not IsAdminInstallMode) then
+  begin
+    Dir := Lowercase(WizardDirValue);
+    if (Pos(Lowercase(ExpandConstant('{commonpf32}')), Dir) = 1) or (Pos(Lowercase(ExpandConstant('{commonpf64}')), Dir) = 1) then
+    begin
+      if ActiveLanguage = 'portuguese' then
+        MsgBox('Esta pasta (Program Files) exige administrador.' + #13#10 + #13#10 +
+               'Escolhe outra pasta (a sugerida funciona sem permissões especiais) ou volta a abrir o instalador e escolhe "Instalar para todos os utilizadores".',
+               mbError, MB_OK)
+      else
+        MsgBox('This folder (Program Files) requires administrator rights.' + #13#10 + #13#10 +
+               'Pick another folder (the suggested one needs no special permissions) or reopen the installer and choose "Install for all users".',
+               mbError, MB_OK);
+      Result := False;
+    end;
+  end;
+end;
+
 // Ao desinstalar: remove o arranque com o Windows e pergunta se tambem apaga o historico e as definicoes.
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var

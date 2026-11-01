@@ -46,6 +46,11 @@ public sealed class HistoryDb : IDisposable
 
     private void Migrate()
     {
+        _db.Execute(@"CREATE TABLE IF NOT EXISTS h2h (
+            cust_id       INTEGER NOT NULL,
+            subsession_id INTEGER NOT NULL,
+            ahead         INTEGER NOT NULL,
+            PRIMARY KEY (cust_id, subsession_id))");
         _db.Execute(@"CREATE TABLE IF NOT EXISTS drivers (
             cust_id    INTEGER PRIMARY KEY,
             name       TEXT NOT NULL,
@@ -417,6 +422,36 @@ public sealed class HistoryDb : IDisposable
     }
 
     /// <summary>Apaga os registos gravados em modo teste. Devolve quantos encontros foram apagados.</summary>
+    /// <summary>Guarda quem acabou a frente (1 = eu, 0 = ele) numa corrida oficial. Pode ser chamado varias vezes (substitui).</summary>
+    public void SaveHeadToHead(long subSessionId, IEnumerable<KeyValuePair<int, bool>> results)
+    {
+        _db.Execute("BEGIN");
+        try
+        {
+            foreach (var kv in results)
+                _db.Execute("INSERT OR REPLACE INTO h2h (cust_id, subsession_id, ahead) VALUES (?, ?, ?)",
+                    kv.Key, subSessionId, kv.Value ? 1 : 0);
+            _db.Execute("COMMIT");
+        }
+        catch
+        {
+            try { _db.Execute("ROLLBACK"); } catch { }
+            throw;
+        }
+    }
+
+    /// <summary>Em quantas corridas oficiais acabei a frente / atras deste piloto (sem contar a sessao atual).</summary>
+    public (int Ahead, int Behind) GetHeadToHead(int custId, long currentSubSessionId)
+    {
+        var rows = _db.Query(
+            "SELECT COALESCE(SUM(ahead), 0), COUNT(*) FROM h2h WHERE cust_id = ? AND subsession_id <> ?",
+            custId, currentSubSessionId);
+        if (rows.Count == 0) return (0, 0);
+        int a = (int)(long)rows[0][0]!;
+        int n = (int)(long)rows[0][1]!;
+        return (a, n - a);
+    }
+
     public int DeleteTestData()
     {
         int n = _db.Execute("DELETE FROM encounters WHERE is_test = 1");

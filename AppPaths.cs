@@ -66,6 +66,10 @@ public sealed class AppSettings
     public bool HidePitCars { get; set; } = true;
     public bool AutoCenter { get; set; } = true;
     public bool AutoBackup { get; set; } = true;
+    public bool KeepAfterRace { get; set; } = true;   // 1.1: depois da bandeira, os pilotos ficam na lista
+    public int RemoveAfterMin { get; set; }           // 0 = nunca; senao remove os que sairam N min depois do fim
+    public bool RadarOn { get; set; } = true;         // 1.1: radar de perigo
+    public int RadarSeconds { get; set; } = 8;
     public bool OnlyWhenConnected { get; set; }
     public int ToggleMods { get; set; } = 3;      // Ctrl+Alt
     public int ToggleVk { get; set; } = 0x4F;     // O

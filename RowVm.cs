@@ -107,6 +107,9 @@ public sealed class RowVm : INotifyPropertyChanged
     private string _tireTip = "";
     public string TireTip { get => _tireTip; set => Set(ref _tireTip, value); }
 
+    private double _rowOpacity = 1.0;
+    public double RowOpacity { get => _rowOpacity; set => Set(ref _rowOpacity, value); }
+
     private Brush _rowBg = Brushes.Transparent;
     public Brush RowBg { get => _rowBg; set => Set(ref _rowBg, value); }
 

@@ -41,6 +41,8 @@ So I built it, locally, on my own PC. Your history lives in a small database on 
 - **Class detection** with a color per car class, class position, and a **strength-of-field (SOF)** figure for the grid and your class.
 - iRating, license class and Safety Rating in a single color-coded badge, country flags, car numbers, and a **tyre icon** (dry / intermediate / wet).
 - Automatic mode switching: **Race**, **Qualifying** or **Practice**.
+- **Danger radar:** drivers tagged Dirty, Aggressive or Unpredictable are highlighted in red and announced in the header when they are within a few seconds of you.
+- After the chequered flag the list is **kept** (drivers who leave are dimmed), with an optional auto-remove timer.
 
 **Driver memory**
 - Every driver is stored by their **iRacing Customer ID**, so name changes do not break the history.
@@ -48,6 +50,7 @@ So I built it, locally, on my own PC. Your history lives in a small database on 
 - **Tags** with clean vector icons (skull, warning, shield, crown, handshake and more) plus your own custom tags, and free-text **notes** per driver.
 - **Search your history** for drivers who are no longer in the session, to add tags or notes afterwards.
 - Filters by name, history, tag and class.
+- **Head-to-head:** for each driver you can see in how many official races you finished ahead of or behind them.
 - Only **official races** are recorded as encounters. Practice and unofficial sessions do not count.
 
 **Make it yours**
@@ -64,6 +67,8 @@ So I built it, locally, on my own PC. Your history lives in a small database on 
 1. Go to [**Releases**](../../releases) and download `ZukaRivals-Setup-x.y.z.exe`.
 2. Run it and follow the wizard: choose the folder, and whether you want a desktop shortcut.
 3. Start **Zuka Rivals** from the Start menu or the desktop and open iRacing. The overlay appears when a session is running.
+
+If Windows says you have no permission, you probably picked `Program Files` without administrator rights: keep the suggested folder, or choose "Install for all users" when the installer starts.
 
 The installer includes everything the program needs (the .NET runtime included), does not ask for administrator rights by default, and adds a normal entry to **Windows Settings > Apps**, so you can uninstall it cleanly. On uninstall it asks whether you also want to delete your history and settings.
 
@@ -110,7 +115,7 @@ The installer is an [Inno Setup](https://jrsoftware.org/isinfo.php) script in [`
 Ideas for future versions (no promises):
 - Support for other sims, starting with **Le Mans Ultimate**, then **Assetto Corsa Competizione**.
 - A signed installer, or a Microsoft Store package, to remove the SmartScreen warning.
-- Tag-aware history indicators.
+- Post-race review and an incidents column.
 
 ## Contributing
 

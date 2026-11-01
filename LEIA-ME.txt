@@ -1,4 +1,4 @@
-ZUKA RIVALS 1.0  -  manual curto
+ZUKA RIVALS 1.1  -  manual curto
 ===========================
 
 PARA QUE SERVE
@@ -6,7 +6,15 @@ Painel por cima do iRacing que mostra os pilotos da sessao (posicao ao vivo, cla
 voltas, gap, melhor volta, pneu) e guarda o historico: contra quem ja corrias, tags e notas por piloto.
 
 INSTALAR
-Executa ZukaRivals-Setup-1.0.0.exe e segue o assistente: escolhe a pasta, e se queres atalho no ambiente de trabalho.
+Executa ZukaRivals-Setup-1.1.exe e segue o assistente: escolhe a pasta, e se queres atalho no ambiente de trabalho.
+Se der "sem permissao": nao instales em Program Files sem administrador. Usa a pasta sugerida, ou escolhe "Instalar para todos os utilizadores".
+
+NOVIDADES 1.1
+- Radar de perigo: piloto com tag Sujo/Agressivo/Imprevisivel a menos de 8 s fica a vermelho e aparece o aviso no topo.
+- Depois da bandeira quadriculada a lista nao esvazia: quem sai fica mais escuro.
+- Confronto direto: no detalhe do piloto, quantas corridas oficiais acabaste a frente/atras dele.
+- Opcoes em Definicoes > Comportamento.
+
 O instalador cria a entrada "Zuka Rivals" no menu Iniciar e em Definicoes > Aplicacoes, e inclui tudo o que o programa
 precisa (nao instales nada a parte). Nao pede administrador por defeito.
 Desinstalar: Definicoes do Windows > Aplicacoes > Zuka Rivals > Desinstalar. No fim pergunta se tambem apagas o

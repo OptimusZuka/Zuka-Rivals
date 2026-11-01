@@ -26,6 +26,11 @@ public partial class MainWindow
         AddRun(count, InfoMain, FontWeights.Normal);
         AddRun("  ·  ", InfoSep, FontWeights.Normal);
         AddRun(recording, recBrush, FontWeights.Normal);
+        if (_radarText != null)
+        {
+            AddRun("  ·  ", InfoSep, FontWeights.Normal);
+            AddRun(_radarText, BrushCache.Rgb(0xF85149), FontWeights.Bold);
+        }
     }
 
     private void AddRun(string text, Brush brush, FontWeight weight)
