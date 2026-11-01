@@ -1,0 +1,654 @@
+<Window x:Class="IRacingTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+        xmlns:loc="clr-namespace:IRacingTracker"
+        Title="Zuka Rivals" Icon="icon.ico"
+        Width="940" Height="560" MinWidth="360" MinHeight="180"
+        WindowStyle="None" AllowsTransparency="True" ResizeMode="NoResize"
+        Background="Transparent"
+        Topmost="True" ShowInTaskbar="False" ShowActivated="False"
+        SourceInitialized="Window_SourceInitialized">
+
+    <Window.Resources>
+        <sys:Double x:Key="BaseFont">14</sys:Double>
+        <sys:Double x:Key="RowH">28</sys:Double>
+        <sys:Double x:Key="SmallFont">12</sys:Double>
+        <sys:Double x:Key="HdrFont">12</sys:Double>
+        <sys:Double x:Key="IconSz">15</sys:Double>
+        <sys:Double x:Key="BadgeSz">22</sys:Double>
+        <sys:Double x:Key="FlagW">22</sys:Double>
+        <sys:Double x:Key="FlagH">15</sys:Double>
+        <sys:Double x:Key="HistSz">11</sys:Double>
+        <sys:Double x:Key="NameMin">230</sys:Double>
+        <sys:Double x:Key="NameMax">150</sys:Double>
+        <sys:Double x:Key="NumMin">40</sys:Double>
+        <GridLength x:Key="W_Pos">42</GridLength>
+        <GridLength x:Key="W_ClassPos">34</GridLength>
+        <Visibility x:Key="V_ClassPos">Visible</Visibility>
+        <GridLength x:Key="W_Class">68</GridLength>
+        <Visibility x:Key="V_Class">Visible</Visibility>
+        <GridLength x:Key="W_Hist">28</GridLength>
+        <Visibility x:Key="V_Hist">Visible</Visibility>
+        <GridLength x:Key="W_IRating">54</GridLength>
+        <Visibility x:Key="V_IRating">Visible</Visibility>
+        <GridLength x:Key="W_Lic">84</GridLength>
+        <Visibility x:Key="V_Lic">Visible</Visibility>
+        <GridLength x:Key="W_Laps">42</GridLength>
+        <Visibility x:Key="V_Laps">Visible</Visibility>
+        <GridLength x:Key="W_Gap">64</GridLength>
+        <Visibility x:Key="V_Gap">Visible</Visibility>
+        <GridLength x:Key="W_Best">80</GridLength>
+        <Visibility x:Key="V_Best">Visible</Visibility>
+        <GridLength x:Key="W_Extra">72</GridLength>
+        <Visibility x:Key="V_Extra">Visible</Visibility>
+        <GridLength x:Key="W_Tire">44</GridLength>
+        <Visibility x:Key="V_Tire">Visible</Visibility>
+        <FontFamily x:Key="FontMain">Segoe UI</FontFamily>
+        <CornerRadius x:Key="RowCorner">2</CornerRadius>
+        <Thickness x:Key="RowMargin">0</Thickness>
+        <SolidColorBrush x:Key="GapBg" Color="#14FFFFFF" />
+        <SolidColorBrush x:Key="DimBrush" Color="#9AA0AA" />
+        <SolidColorBrush x:Key="LineBrush" Color="#1D1D1D" />
+        <SolidColorBrush x:Key="AccentBrush" Color="#F2B705" />
+        <SolidColorBrush x:Key="BtnBg" Color="#262626" />
+        <SolidColorBrush x:Key="BtnFg" Color="#D0D0D0" />
+        <SolidColorBrush x:Key="BtnBorder" Color="#3A3A3A" />
+        <SolidColorBrush x:Key="BtnHoverBorder" Color="#5A86B0" />
+        <SolidColorBrush x:Key="BtnHoverBg" Color="#2E2E2E" />
+        <SolidColorBrush x:Key="BtnSelBg" Color="#2B4C7E" />
+        <SolidColorBrush x:Key="BtnSelFg" Color="#FFFFFF" />
+        <CornerRadius x:Key="BtnCorner">4</CornerRadius>
+        <Thickness x:Key="BtnBorderTh">1</Thickness>
+        <Thickness x:Key="BtnPad">10,3</Thickness>
+        <FontWeight x:Key="BtnWeight">Normal</FontWeight>
+        <SolidColorBrush x:Key="PanelBg" Color="#161A20" />
+        <SolidColorBrush x:Key="PanelItemBg" Color="#1C2027" />
+        <SolidColorBrush x:Key="PanelBorder" Color="#2A2A2A" />
+        <CornerRadius x:Key="PanelCorner">4</CornerRadius>
+        <SolidColorBrush x:Key="TxtBg" Color="#1C1C1C" />
+        <SolidColorBrush x:Key="TxtBorder" Color="#3A3A3A" />
+        <SolidColorBrush x:Key="FooterBg" Color="Transparent" />
+        <SolidColorBrush x:Key="SofFg" Color="#7FB2F0" />
+        <SolidColorBrush x:Key="PillBg" Color="Transparent" />
+        <SolidColorBrush x:Key="PillFg" Color="#9AA0AA" />
+        <CornerRadius x:Key="PillCorner">3</CornerRadius>
+        <Thickness x:Key="HdrPad">10,6</Thickness>
+        <CornerRadius x:Key="RootCorner">8</CornerRadius>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#D8D8D8" />
+            <Setter Property="FontFamily" Value="{DynamicResource FontMain}" />
+            <Setter Property="FontSize" Value="{DynamicResource BaseFont}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource BtnBg}" />
+            <Setter Property="Foreground" Value="{DynamicResource BtnFg}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BtnBorder}" />
+            <Setter Property="FontFamily" Value="{DynamicResource FontMain}" />
+            <Setter Property="FontWeight" Value="{DynamicResource BtnWeight}" />
+            <Setter Property="Padding" Value="{DynamicResource BtnPad}" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{DynamicResource BtnBorderTh}" CornerRadius="{DynamicResource BtnCorner}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource BtnHoverBorder}" />
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BtnHoverBg}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BtnSelBg}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#D0D0D0" />
+            <Setter Property="Margin" Value="0,0,12,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Focusable" Value="False" />
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{DynamicResource TxtBg}" />
+            <Setter Property="Foreground" Value="#E8E8E8" />
+            <Setter Property="CaretBrush" Value="#E8E8E8" />
+            <Setter Property="BorderBrush" Value="{DynamicResource TxtBorder}" />
+            <Setter Property="Padding" Value="4,3" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style x:Key="InvisibleThumb" TargetType="Thumb">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border Background="Transparent" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid TextElement.Foreground="#D8D8D8">
+        <Border x:Name="RootBorder" Background="#14161A" BorderThickness="0" CornerRadius="{DynamicResource RootCorner}" SnapsToDevicePixels="True">
+            <Grid Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Barra de titulo: arrastar para mover -->
+                <Grid x:Name="HeaderBar" Grid.Row="0" Background="#1C1F26" Margin="0,0,0,6"
+                      MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                    <StackPanel Orientation="Horizontal" Margin="{DynamicResource HdrPad}">
+                        <TextBlock Text="ZUKA RIVALS" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" FontSize="15" />
+                        <Border Background="{DynamicResource PillBg}" CornerRadius="{DynamicResource PillCorner}" Padding="8,1" Margin="10,1,0,0" VerticalAlignment="Center">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=ModeText}" Value="">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <TextBlock x:Name="ModeText" Text="" FontSize="{DynamicResource SmallFont}" FontWeight="SemiBold" Foreground="{DynamicResource PillFg}" />
+                        </Border>
+                    </StackPanel>
+                    <Rectangle x:Name="HeaderLine" Height="2" VerticalAlignment="Bottom" Fill="{DynamicResource AccentBrush}" Opacity="0.85" />
+                </Grid>
+
+                <TextBlock x:Name="StatusText" Grid.Row="1" FontSize="{DynamicResource BaseFont}" FontWeight="SemiBold"
+                           Foreground="#9A9A9A" Text="A procurar o iRacing..." Margin="2,0,0,2" />
+
+                <TextBlock x:Name="SofText" Grid.Row="1" FontSize="{DynamicResource BaseFont}" FontWeight="SemiBold" Foreground="{DynamicResource SofFg}"
+                           HorizontalAlignment="Right" Margin="0,0,2,2"
+                           ToolTip="{loc:Tr sof_tip}" />
+
+                <TextBlock x:Name="InfoText" Grid.Row="2" FontSize="{DynamicResource SmallFont}" Foreground="#DADFE8"
+                           TextTrimming="CharacterEllipsis" Margin="2,0,0,6" />
+
+                <!-- Filtros -->
+                <StackPanel Grid.Row="3">
+                    <Border x:Name="FilterPanel" Visibility="Collapsed" Background="{DynamicResource PanelBg}" CornerRadius="{DynamicResource PanelCorner}"
+                        Padding="6,5,6,0" Margin="0,0,0,6">
+                    <WrapPanel VerticalAlignment="Center">
+                        <TextBox x:Name="FilterSearchBox" Width="170" Margin="0,0,8,5"
+                                 ToolTip="{loc:Tr filter_search_tip}"
+                                 PreviewMouseLeftButtonDown="FilterSearch_PreviewMouseLeftButtonDown"
+                                 KeyDown="FilterSearch_KeyDown" TextChanged="FilterSearch_TextChanged" />
+                        <Button x:Name="FilterHistButton" Content="Histórico: todos" Margin="0,0,8,5" Click="FilterHist_Click" />
+                        <Button x:Name="FilterTagButton" Content="Tag: todas" Margin="0,0,8,5" Click="FilterTag_Click" />
+                        <Button x:Name="FilterClassButton" Content="Classe: todas" Margin="0,0,8,5" Click="FilterClass_Click" />
+                        <Button Content="{loc:Tr filter_clear}" Margin="0,0,8,5" Click="FilterClear_Click" />
+                        <Button Content="✕" Margin="0,0,0,5" Padding="8,0" MinWidth="0" Click="FilterClose_Click" />
+                    </WrapPanel>
+                </Border>
+                    <Border x:Name="HistSearchPanel" Visibility="Collapsed" Background="{DynamicResource PanelBg}" CornerRadius="{DynamicResource PanelCorner}"
+                            Padding="6" Margin="0,0,0,6">
+                        <StackPanel>
+                            <Button Content="✕" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,0" MinWidth="0"
+                                    Click="HistClose_Click" Panel.ZIndex="5" Margin="0,0,0,-24" />
+                            <TextBox x:Name="HistSearchBox" Width="260" HorizontalAlignment="Left"
+                                     ToolTip="{loc:Tr hs_tip}"
+                                     PreviewMouseLeftButtonDown="HistSearch_PreviewMouseLeftButtonDown"
+                                     KeyDown="HistSearch_KeyDown" TextChanged="HistSearch_TextChanged" />
+                            <TextBlock x:Name="HistSearchHint" FontSize="11" Foreground="#8A8A8A" Margin="2,4,0,2" />
+                            <ScrollViewer x:Name="HistScroll" MaxHeight="150" VerticalScrollBarVisibility="Auto" Focusable="False">
+                                <ItemsControl x:Name="HistResults">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{DynamicResource PanelItemBg}" CornerRadius="{DynamicResource PanelCorner}" Padding="6,3" Margin="0,2,0,0" Cursor="Hand"
+                                                    MouseLeftButtonUp="HistResult_MouseLeftButtonUp">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="#F4F4F4" />
+                                                    <TextBlock Text="{Binding Info}" Margin="10,0,0,0" Foreground="#9AA3B2"
+                                                               FontSize="{DynamicResource SmallFont}" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Cabecalho das colunas (mesmas larguras das linhas) -->
+                <Grid x:Name="ColHeader" Grid.Row="4" Margin="0,0,0,3" Background="#1C1F26" MinHeight="28">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="{DynamicResource W_Pos}" />
+                        <ColumnDefinition Width="{DynamicResource W_ClassPos}" />
+                        <ColumnDefinition Width="{DynamicResource W_Class}" />
+                        <ColumnDefinition Width="*" MinWidth="{DynamicResource NameMin}" />
+                        <ColumnDefinition Width="{DynamicResource W_Hist}" />
+                        <ColumnDefinition Width="{DynamicResource W_IRating}" />
+                        <ColumnDefinition Width="{DynamicResource W_Lic}" />
+                        <ColumnDefinition Width="{DynamicResource W_Laps}" />
+                        <ColumnDefinition Width="{DynamicResource W_Gap}" />
+                        <ColumnDefinition Width="{DynamicResource W_Best}" />
+                        <ColumnDefinition Width="{DynamicResource W_Extra}" />
+                        <ColumnDefinition Width="{DynamicResource W_Tire}" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="1" Text="{loc:Tr hdr_pos}" FontSize="{DynamicResource HdrFont}" FontWeight="Bold" Foreground="#D6DAE2" HorizontalAlignment="Center" ToolTip="{loc:Tr tip_pos}" />
+                    <TextBlock Grid.Column="2" Visibility="{DynamicResource V_ClassPos}" Text="{loc:Tr hdr_cl}" FontSize="{DynamicResource HdrFont}" FontWeight="Bold" Foreground="#D6DAE2" HorizontalAlignment="Center" ToolTip="{loc:Tr tip_cl}" />
+                    <TextBlock Grid.Column="3" Visibility="{DynamicResource V_Class}" Text="{loc:Tr hdr_class}" FontSize="{DynamicResource HdrFont}" FontWeight="Bold" Foreground="#D6DAE2" Margin="4,0,0,0" ToolTip="{loc:Tr tip_class}" />
+                    <TextBlock Grid.Column="4" Text="{loc:Tr hdr_driver}" FontSize="{DynamicResource HdrFont}" FontWeight="Bold" Foreground="#D6DAE2" Margin="6,0,0,0" ToolTip="{loc:Tr tip_driver}" />
+                    <TextBlock Grid.Column="5" Visibility="{DynamicResource V_Hist}" Text="{loc:Tr hdr_hist}" FontSize="{DynamicResource HdrFont}" FontWeight="Bold" Foreground="#D6DAE2" HorizontalAlignment="Center" ToolTip="{loc:Tr tip_hist}" />
+                    <TextBlock Grid.Column="6" Visibility="{DynamicResource V_IRating}" Text="{loc:Tr hdr_ir}" FontSize="{DynamicResource HdrFont}" FontWeight="Bold" Foreground="#D6DAE2" HorizontalAlignment="Right" Margin="0,0,8,0" ToolTip="iRating" />
+                    <TextBlock Grid.Column="7" Visibility="{DynamicResource V_Lic}" Text="{loc:Tr hdr_lic}" FontSize="{DynamicResource HdrFont}" FontWeight="Bold" Foreground="#D6DAE2" HorizontalAlignment="Center" ToolTip="{loc:Tr tip_lic}" />
+                    <TextBlock Grid.Column="8" Visibility="{DynamicResource V_Laps}" Text="{loc:Tr hdr_laps}" FontSize="{DynamicResource HdrFont}" FontWeight="Bold" Foreground="#D6DAE2" HorizontalAlignment="Center" ToolTip="{loc:Tr tip_laps}" />
+                    <TextBlock Grid.Column="9" Visibility="{DynamicResource V_Gap}" Text="{loc:Tr hdr_gap}" FontSize="{DynamicResource HdrFont}" FontWeight="Bold" Foreground="#D6DAE2" HorizontalAlignment="Right" Margin="0,0,8,0" ToolTip="{loc:Tr tip_gap}" />
+                    <TextBlock Grid.Column="10" Visibility="{DynamicResource V_Best}" Text="{loc:Tr hdr_best}" FontSize="{DynamicResource HdrFont}" FontWeight="Bold" Foreground="#D6DAE2" HorizontalAlignment="Right" Margin="0,0,8,0" ToolTip="{loc:Tr tip_best}" />
+                    <TextBlock x:Name="HdrExtra" Grid.Column="11" Visibility="{DynamicResource V_Extra}" Text="ÚLT" FontSize="{DynamicResource HdrFont}" FontWeight="Bold" Foreground="#D6DAE2" HorizontalAlignment="Right" Margin="0,0,8,0" ToolTip="" />
+                    <TextBlock Grid.Column="12" Visibility="{DynamicResource V_Tire}" Text="{loc:Tr hdr_tire}" FontSize="{DynamicResource HdrFont}" FontWeight="Bold" Foreground="#D6DAE2" HorizontalAlignment="Center" ToolTip="{loc:Tr tip_tire}" />
+                </Grid>
+
+                <!-- Tabela de pilotos -->
+                <ScrollViewer x:Name="RowsScroll" Grid.Row="5" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+                    <ItemsControl x:Name="RowsList" Focusable="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding RowBg}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,0,1"
+                                        CornerRadius="{DynamicResource RowCorner}" Margin="{DynamicResource RowMargin}" Cursor="Hand" MouseLeftButtonUp="Row_MouseLeftButtonUp" MouseRightButtonUp="Row_MouseRightButtonUp">
+                                    <Grid Height="{DynamicResource RowH}">
+                                        <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="{DynamicResource W_Pos}" />
+                        <ColumnDefinition Width="{DynamicResource W_ClassPos}" />
+                        <ColumnDefinition Width="{DynamicResource W_Class}" />
+                        <ColumnDefinition Width="*" MinWidth="{DynamicResource NameMin}" />
+                        <ColumnDefinition Width="{DynamicResource W_Hist}" />
+                        <ColumnDefinition Width="{DynamicResource W_IRating}" />
+                        <ColumnDefinition Width="{DynamicResource W_Lic}" />
+                        <ColumnDefinition Width="{DynamicResource W_Laps}" />
+                        <ColumnDefinition Width="{DynamicResource W_Gap}" />
+                        <ColumnDefinition Width="{DynamicResource W_Best}" />
+                        <ColumnDefinition Width="{DynamicResource W_Extra}" />
+                        <ColumnDefinition Width="{DynamicResource W_Tire}" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Grid.Column="0" Background="{Binding ClassBrush}" CornerRadius="2" Margin="0,3,1,3" />
+
+                                        <Border Grid.Column="1" Background="{Binding PosBg}" CornerRadius="4" Margin="3,3,3,3">
+                                            <TextBlock Text="{Binding Pos}" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{Binding PosFg}" />
+                                        </Border>
+
+                                        <TextBlock Grid.Column="2" Visibility="{DynamicResource V_ClassPos}" Text="{Binding ClassPos}" HorizontalAlignment="Center" FontWeight="SemiBold" Foreground="{Binding ClassBrush}" />
+
+                                        <Border Grid.Column="3" Visibility="{DynamicResource V_Class}" Background="{Binding ClassPillBg}" CornerRadius="4" Margin="3,4,3,4" ToolTip="{Binding ClassTip}">
+                                            <TextBlock Text="{Binding ClassName}" TextTrimming="CharacterEllipsis" FontSize="{DynamicResource SmallFont}" FontWeight="SemiBold"
+                                                       Foreground="{Binding ClassBrush}" HorizontalAlignment="Center" />
+                                        </Border>
+
+                                        <!-- Bandeira, numero do carro e nome -->
+                                        <Grid Grid.Column="4" Margin="6,0,4,0" ClipToBounds="True">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" MinWidth="{DynamicResource NumMin}" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" Width="{DynamicResource FlagW}" Height="{DynamicResource FlagH}" CornerRadius="2" ClipToBounds="True" Margin="0,0,7,0"
+                                                    BorderBrush="#40000000" BorderThickness="1" VerticalAlignment="Center">
+                                                <Image Source="{Binding Flag}" Stretch="Fill" />
+                                            </Border>
+                                            <TextBlock Grid.Column="1" Text="{Binding NumText}" FontWeight="SemiBold" Foreground="{Binding ClassBrush}" Margin="0,0,6,0" />
+                                            <TextBlock Grid.Column="2" Text="{Binding Name}" MaxWidth="{DynamicResource NameMax}" TextTrimming="CharacterEllipsis" FontWeight="SemiBold" Foreground="#F4F4F4" />
+                                            <ItemsControl Grid.Column="3" ItemsSource="{Binding Tags}" Focusable="False"
+                                                      VerticalAlignment="Center" ClipToBounds="True" Margin="6,0,0,0">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Viewbox Width="{DynamicResource IconSz}" Height="{DynamicResource IconSz}" Margin="0,0,3,0" ToolTip="{Binding Tooltip}">
+                                                        <Canvas Width="24" Height="24">
+                                                            <Path Data="{Binding Icon}" Stroke="{Binding Brush}" StrokeThickness="2"
+                                                                  StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+                                                        </Canvas>
+                                                    </Viewbox>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        </Grid>
+
+                                        
+
+                                        <Ellipse Grid.Column="5" Visibility="{DynamicResource V_Hist}" Width="{DynamicResource HistSz}" Height="{DynamicResource HistSz}" Fill="{Binding HistBrush}" ToolTip="{Binding HistTip}" />
+
+                                        <TextBlock Grid.Column="6" Visibility="{DynamicResource V_IRating}" Text="{Binding IRating}" HorizontalAlignment="Right" Margin="0,0,8,0" Foreground="#E8E8E8" />
+
+                                        <Border Grid.Column="7" Visibility="{DynamicResource V_Lic}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                Height="{DynamicResource BadgeSz}" CornerRadius="20" Padding="7,0" BorderThickness="1.5"
+                                                BorderBrush="{Binding LicBrush}" Background="{Binding LicBg}">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding LicLetter}" FontSize="{DynamicResource SmallFont}" FontWeight="Bold" Foreground="{Binding LicBrush}" />
+                                                <TextBlock Text="{Binding LicSr}" FontSize="{DynamicResource SmallFont}" FontWeight="SemiBold" Foreground="#F0F2F6" Margin="5,0,0,0" />
+                                            </StackPanel>
+                                        </Border>
+
+                                        <TextBlock Grid.Column="8" Visibility="{DynamicResource V_Laps}" Text="{Binding Laps}" HorizontalAlignment="Center" Foreground="#B0B6C0" />
+
+                                        <Border Grid.Column="9" Visibility="{DynamicResource V_Gap}" Background="{DynamicResource GapBg}" CornerRadius="4" Margin="2,3,4,3">
+                                            <TextBlock Text="{Binding Gap}" HorizontalAlignment="Right" Margin="0,0,6,0" FontWeight="SemiBold" Foreground="#F0F0F0" />
+                                        </Border>
+
+                                        <TextBlock Grid.Column="10" Visibility="{DynamicResource V_Best}" Text="{Binding Best}" HorizontalAlignment="Right" Margin="0,0,8,0" FontWeight="SemiBold" Foreground="{Binding BestBrush}" />
+                                        <TextBlock Grid.Column="11" Visibility="{DynamicResource V_Extra}" Text="{Binding Extra}" HorizontalAlignment="Right" Margin="0,0,8,0" Foreground="#B0B6C0" />
+
+                                        <StackPanel Grid.Column="12" Visibility="{DynamicResource V_Tire}" Orientation="Horizontal" HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center" ToolTip="{Binding TireTip}">
+                                            <Viewbox Width="{DynamicResource IconSz}" Height="{DynamicResource IconSz}">
+                                                <Canvas Width="24" Height="24">
+                                                    <Ellipse Width="22" Height="22" Canvas.Left="1" Canvas.Top="1" Fill="#22252B" Stroke="#555B66" StrokeThickness="1" />
+                                                    <Ellipse Width="15" Height="15" Canvas.Left="4.5" Canvas.Top="4.5" Stroke="{Binding TireBrush}" StrokeThickness="2.6" />
+                                                    <Ellipse Width="8" Height="8" Canvas.Left="8" Canvas.Top="8" Fill="#3A3F48" Stroke="#7A808C" StrokeThickness="1" />
+                                                    <Ellipse Width="3" Height="3" Canvas.Left="10.5" Canvas.Top="10.5" Fill="#9AA0AC" />
+                                                </Canvas>
+                                            </Viewbox>
+                                            <TextBlock Text="{Binding TireMark}" FontSize="{DynamicResource SmallFont}" Foreground="#C4C8D0" Margin="2,0,0,0" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <!-- Painel do piloto: tags, historico, notas -->
+                <Border x:Name="DetailPanel" Grid.Row="6" Visibility="Collapsed" Background="{DynamicResource PanelBg}" CornerRadius="{DynamicResource PanelCorner}"
+                        BorderBrush="{DynamicResource PanelBorder}" BorderThickness="0,1,0,0" Margin="0,6,0,0" Padding="8,6">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="DetailTitle" FontSize="13" FontWeight="SemiBold" Foreground="#F0F0F0" TextTrimming="CharacterEllipsis" />
+                            <Button Grid.Column="1" Content="X" Padding="6,1" Margin="8,0,0,0" Click="CloseDetail_Click" />
+                        </Grid>
+
+                        <!-- Tags: clicar liga/desliga -->
+                        <ItemsControl x:Name="ChipsList" Grid.Row="1" Focusable="False" Margin="0,0,0,4">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border x:Name="ChipBorder" Margin="0,0,6,4" Padding="6,3" CornerRadius="3" BorderThickness="1"
+                                            BorderBrush="#333333" Background="#1C1C1C" Cursor="Hand"
+                                            ToolTip="{Binding Def.Tooltip}" MouseLeftButtonUp="Chip_MouseLeftButtonUp">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Viewbox Width="14" Height="14">
+                                                <Canvas Width="24" Height="24">
+                                                    <Path Data="{Binding Def.Icon}" Stroke="{Binding Def.Brush}" StrokeThickness="2"
+                                                          StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+                                                </Canvas>
+                                            </Viewbox>
+                                            <TextBlock Text="{Binding Def.Name}" Margin="6,0,0,0" FontSize="11" Foreground="#C8C8C8" />
+                                        </StackPanel>
+                                    </Border>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsOn}" Value="True">
+                                            <Setter TargetName="ChipBorder" Property="Background" Value="#26323D" />
+                                            <Setter TargetName="ChipBorder" Property="BorderBrush" Value="#5A86B0" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <ScrollViewer Grid.Row="2" MaxHeight="110" VerticalScrollBarVisibility="Auto" Focusable="False">
+                            <TextBlock x:Name="DetailText" FontFamily="Consolas" FontSize="11" TextWrapping="Wrap" Foreground="#C8C8C8" />
+                        </ScrollViewer>
+
+                        <!-- Nova nota (ao clicar na caixa, o programa passa a receber o teclado) -->
+                        <Grid x:Name="NoteArea" Grid.Row="3" Margin="0,6,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="NoteBox" MaxLength="300"
+                                     ToolTip="{loc:Tr note_tip}"
+                                     PreviewMouseLeftButtonDown="NoteBox_PreviewMouseLeftButtonDown"
+                                     KeyDown="NoteBox_KeyDown" />
+                            <Button Grid.Column="1" Content="{loc:Tr btn_save_note}" Margin="8,0,0,0" Click="SaveNote_Click" />
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- Definicoes -->
+                <Border x:Name="SettingsPanel" Grid.Row="7" Visibility="Collapsed" Background="{DynamicResource PanelBg}" CornerRadius="{DynamicResource PanelCorner}"
+                        BorderBrush="{DynamicResource PanelBorder}" BorderThickness="0,1,0,0" Margin="0,6,0,0" Padding="8,6">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
+                            <Button x:Name="TabBtn0" Content="{loc:Tr tab_look}" Tag="0" Click="Tab_Click" />
+                            <Button x:Name="TabBtn1" Content="{loc:Tr tab_table}" Tag="1" Click="Tab_Click" />
+                            <Button x:Name="TabBtn2" Content="{loc:Tr tab_behavior}" Tag="2" Click="Tab_Click" />
+                            <Button x:Name="TabBtn3" Content="{loc:Tr tab_data}" Tag="3" Click="Tab_Click" />
+                            <Button x:Name="TabBtn4" Content="{loc:Tr tab_tags}" Tag="4" Click="Tab_Click" />
+                        </StackPanel>
+
+                        <ScrollViewer Grid.Row="1" MaxHeight="190" VerticalScrollBarVisibility="Auto" Focusable="False">
+                            <Grid>
+                                <!-- APARENCIA -->
+                                <Grid x:Name="TabLook">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="170" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Text="{loc:Tr lbl_opacity}" Margin="0,2,0,6" />
+                                    <Slider x:Name="OpacitySlider" Grid.Row="0" Grid.Column="1" Width="200" Minimum="0.1" Maximum="1"
+                                            Value="0.94" Focusable="False" VerticalAlignment="Center" Margin="0,2,10,6"
+                                            ValueChanged="OpacitySlider_ValueChanged" />
+                                    <TextBlock x:Name="OpacityText" Grid.Row="0" Grid.Column="2" Text="94%" Margin="0,2,0,6" />
+
+                                    <TextBlock Grid.Row="1" Text="{loc:Tr lbl_font}" Margin="0,2,0,6" />
+                                    <Slider x:Name="FontSlider" Grid.Row="1" Grid.Column="1" Width="200" Minimum="11" Maximum="20"
+                                            Value="14" TickFrequency="1" IsSnapToTickEnabled="True" Focusable="False"
+                                            VerticalAlignment="Center" Margin="0,2,10,6"
+                                            ValueChanged="FontSlider_ValueChanged" />
+                                    <TextBlock x:Name="FontText" Grid.Row="1" Grid.Column="2" Text="14 pt" Margin="0,2,0,6" />
+
+                                    <TextBlock Grid.Row="2" Text="{loc:Tr lbl_rowh}" Margin="0,2,0,6" />
+                                    <Slider x:Name="RowHeightSlider" Grid.Row="2" Grid.Column="1" Width="200" Minimum="22" Maximum="40"
+                                            Value="28" TickFrequency="1" IsSnapToTickEnabled="True" Focusable="False"
+                                            VerticalAlignment="Center" Margin="0,2,10,6"
+                                            ValueChanged="RowHeightSlider_ValueChanged" />
+                                    <TextBlock x:Name="RowHeightText" Grid.Row="2" Grid.Column="2" Text="28 px" Margin="0,2,0,6" />
+                                    <TextBlock Grid.Row="3" Text="{loc:Tr lbl_language}" Margin="0,2,0,6" />
+                                    <StackPanel Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,6">
+                                        <Button x:Name="LangBtn0" Content="Português" Tag="pt" Margin="0,0,6,0" Click="Lang_Click" />
+                                        <Button x:Name="LangBtn1" Content="English" Tag="en" Margin="0,0,6,0" Click="Lang_Click" />
+                                        <Button x:Name="LangBtn2" Content="Español" Tag="es" Margin="0,0,6,0" Click="Lang_Click" />
+                                        <Button x:Name="LangBtn3" Content="Français" Tag="fr" Margin="0,0,6,0" Click="Lang_Click" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="4" Text="{loc:Tr lbl_theme}" Margin="0,2,0,6" />
+                                    <WrapPanel Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,6">
+                                        <Button x:Name="ThemeBtn0" Tag="pitwall" Margin="0,0,6,4" Click="Theme_Click" />
+                                        <Button x:Name="ThemeBtn1" Tag="cards" Margin="0,0,6,4" Click="Theme_Click" />
+                                        <Button x:Name="ThemeBtn2" Tag="tower" Margin="0,0,6,4" Click="Theme_Click" />
+                                        <Button x:Name="ThemeBtn3" Tag="hud" Margin="0,0,6,4" Click="Theme_Click" />
+                                        <Button x:Name="ThemeBtn4" Tag="data" Margin="0,0,6,4" Click="Theme_Click" />
+                                    </WrapPanel>
+                                    <TextBlock Grid.Row="5" Text="{loc:Tr lbl_accent}" Margin="0,2,0,6" />
+                                    <WrapPanel x:Name="AccentSwatches" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,6" />
+                                    <TextBlock Grid.Row="6" Text="{loc:Tr lbl_bgcol}" Margin="0,2,0,6" />
+                                    <WrapPanel x:Name="BgSwatches" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,6" />
+                                    <TextBlock Grid.Row="7" Text="{loc:Tr lbl_hdrcol}" Margin="0,2,0,6" />
+                                    <WrapPanel x:Name="HdrSwatches" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,6" />
+                                </Grid>
+
+                                <!-- TABELA -->
+                                <StackPanel x:Name="TabTable">
+                                    <TextBlock Text="{loc:Tr txt_columns_hint}" Foreground="#8A8A8A" FontSize="11" Margin="0,0,0,6" />
+                                    <WrapPanel x:Name="ColumnsPanel" />
+                                </StackPanel>
+
+                                <!-- COMPORTAMENTO -->
+                                <Grid x:Name="TabBehavior">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="190" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <WrapPanel Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,8">
+                                        <CheckBox x:Name="TopmostCheck" Content="{loc:Tr chk_topmost}" Checked="Option_Changed" Unchecked="Option_Changed" />
+                                        <CheckBox x:Name="HidePitCheck" Content="{loc:Tr chk_hidepit}" Checked="Option_Changed" Unchecked="Option_Changed" />
+                                        <CheckBox x:Name="CenterCheck" Content="{loc:Tr chk_center}" Checked="Option_Changed" Unchecked="Option_Changed" />
+                                        <CheckBox x:Name="OnlyConnectedCheck" Content="{loc:Tr chk_onlyconn}" Checked="Option_Changed" Unchecked="Option_Changed"
+                                                  ToolTip="{loc:Tr tip_onlyconn}" />
+                                    <CheckBox x:Name="AutostartCheck" Content="{loc:Tr chk_autostart}" Checked="AutostartCheck_Changed" Unchecked="AutostartCheck_Changed"
+                                                  ToolTip="{loc:Tr tip_autostart}" />
+                                    </WrapPanel>
+
+                                    <TextBlock Grid.Row="1" Text="{loc:Tr lbl_hk_toggle}" Margin="0,2,0,6" />
+                                    <Button x:Name="HotkeyToggleButton" Grid.Row="1" Grid.Column="1" MinWidth="200" Margin="0,0,10,6"
+                                            Click="HotkeyToggleButton_Click" />
+                                    <TextBlock x:Name="HotkeyToggleStatus" Grid.Row="1" Grid.Column="2" FontSize="11" Foreground="#8A8A8A" Margin="0,2,0,6" />
+
+                                    <TextBlock Grid.Row="2" Text="{loc:Tr lbl_hk_click}" Margin="0,2,0,6" />
+                                    <Button x:Name="HotkeyClickButton" Grid.Row="2" Grid.Column="1" MinWidth="200" Margin="0,0,10,6"
+                                            Click="HotkeyClickButton_Click" />
+                                    <TextBlock x:Name="HotkeyClickStatus" Grid.Row="2" Grid.Column="2" FontSize="11" Foreground="#8A8A8A" Margin="0,2,0,6" />
+
+                                    <TextBlock Grid.Row="3" Text="{loc:Tr lbl_ct}" Margin="0,2,0,6" />
+                                    <Button x:Name="ClickThroughButton" Grid.Row="3" Grid.Column="1" MinWidth="200" Margin="0,0,10,6"
+                                            Content="Ativar click-through" Click="ClickThroughButton_Click" />
+
+                                    <TextBlock Grid.Row="4" Grid.ColumnSpan="3" TextWrapping="Wrap" FontSize="11" Foreground="#8A8A8A"
+                                               Text="{loc:Tr txt_ct_help}" />
+                                </Grid>
+
+                                <!-- TAGS -->
+                                <StackPanel x:Name="TabTags">
+                                    <TextBlock Text="{loc:Tr txt_tags_hint}" Foreground="#8A8A8A" FontSize="11" Margin="0,0,0,6" />
+                                    <WrapPanel x:Name="TagListPanel" Margin="0,0,0,6" />
+                                    <TextBlock Text="{loc:Tr txt_tags_new}" Foreground="#8A8A8A" FontSize="11" Margin="0,4,0,6" />
+                                    <TextBox x:Name="TagNameBox" Width="200" HorizontalAlignment="Left" MaxLength="20"
+                                             ToolTip="{loc:Tr tip_tagname}"
+                                             PreviewMouseLeftButtonDown="TagNameBox_PreviewMouseLeftButtonDown"
+                                             KeyDown="TagNameBox_KeyDown" />
+                                    <WrapPanel x:Name="IconPicker" Margin="0,8,0,0" />
+                                    <WrapPanel x:Name="ColorPicker" Margin="0,4,0,6" />
+                                    <Button Content="{loc:Tr btn_create_tag}" HorizontalAlignment="Left" Click="CreateTag_Click" />
+                                </StackPanel>
+
+                                <!-- DADOS -->
+                                <StackPanel x:Name="TabData">
+                                    <WrapPanel Margin="0,0,0,6">
+                                        <Button Content="{loc:Tr btn_backup_now}" Click="BackupNow_Click" Margin="0,0,8,6" />
+                                        <Button Content="{loc:Tr btn_export}" Click="ExportBackup_Click" Margin="0,0,8,6" />
+                                        <Button Content="{loc:Tr btn_import}" Click="ImportBackup_Click" Margin="0,0,8,6" />
+                                        <Button Content="{loc:Tr btn_open_backups}" Click="OpenBackupFolder_Click" Margin="0,0,8,6" />
+                                    </WrapPanel>
+                                    <CheckBox x:Name="AutoBackupCheck" Content="{loc:Tr chk_autobackup}" Margin="0,0,0,8"
+                                              Checked="Option_Changed" Unchecked="Option_Changed" />
+                                    <TextBlock Text="{loc:Tr txt_backup_help}"
+                                               TextWrapping="Wrap" FontSize="11" Foreground="#8A8A8A" Margin="0,0,0,8" />
+                                    <TextBlock Text="{loc:Tr txt_extra_title}" Margin="0,0,0,4" />
+                                    <TextBlock x:Name="ExtraDirText" TextWrapping="Wrap" FontSize="11" Foreground="#8A8A8A" Margin="0,0,0,6" />
+                                    <WrapPanel Margin="0,0,0,6">
+                                        <Button Content="{loc:Tr btn_extra_choose}" Click="ExtraDirChoose_Click" Margin="0,0,8,6" />
+                                        <Button Content="{loc:Tr btn_extra_clear}" Click="ExtraDirClear_Click" Margin="0,0,8,6" />
+                                    </WrapPanel>
+                                    <WrapPanel Visibility="Collapsed">
+                                        <CheckBox x:Name="TestModeCheck" Content="{loc:Tr chk_testmode}"
+                                                  ToolTip="{loc:Tr tip_testmode}"
+                                                  Checked="TestModeCheck_Changed" Unchecked="TestModeCheck_Changed" />
+                                        <Button Content="{loc:Tr btn_delete_test}" Click="DeleteTest_Click" />
+                                        <Button Content="{loc:Tr btn_dump}" Click="Dump_Click" />
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+
+                <!-- Rodape -->
+                <WrapPanel x:Name="FooterBar" Grid.Row="8" Margin="0,8,0,0" VerticalAlignment="Center" Background="{DynamicResource FooterBg}">
+                    <Button x:Name="FilterToggleButton" Content="Filtros" Click="FilterToggle_Click" />
+                    <Button Content="{loc:Tr btn_hsearch}" Click="HistSearchToggle_Click" />
+                    <Button Content="{loc:Tr btn_settings}" Click="SettingsButton_Click" />
+                    <Button Content="{loc:Tr btn_exit}" Click="Exit_Click" />
+                    <TextBlock x:Name="ToastText" Foreground="#E0B84C" FontSize="11" />
+                </WrapPanel>
+            </Grid>
+        </Border>
+
+        <!-- Pegas para redimensionar: lado direito, lado de baixo e canto -->
+        <Button x:Name="CompactButton" Content="▾" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Margin="0,0,24,3" Padding="7,0" MinWidth="0" MinHeight="0" FontSize="11" Opacity="0.6"
+                ToolTip="{loc:Tr tip_compact}" Click="Compact_Click" />
+        <Thumb Style="{StaticResource InvisibleThumb}" x:Name="ResizeRight" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="6"
+               Margin="0,24,0,18" Cursor="SizeWE" Background="Transparent" DragDelta="ResizeRight_DragDelta" />
+        <Thumb Style="{StaticResource InvisibleThumb}" x:Name="ResizeBottom" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="6"
+               Margin="0,0,18,0" Cursor="SizeNS" Background="Transparent" DragDelta="ResizeBottom_DragDelta" />
+        <Thumb Style="{StaticResource InvisibleThumb}" x:Name="ResizeCorner" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="18" Height="18"
+               Cursor="SizeNWSE" Background="Transparent" DragDelta="ResizeCorner_DragDelta" />
+        <TextBlock Text="◢" FontSize="11" Foreground="#6A6A6A" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                   Margin="0,0,3,1" IsHitTestVisible="False" />
+    </Grid>
+</Window>

@@ -1,0 +1,90 @@
+ZUKA RIVALS 1.0  -  manual curto
+===========================
+
+PARA QUE SERVE
+Painel por cima do iRacing que mostra os pilotos da sessao (posicao ao vivo, classe, iRating, licenca,
+voltas, gap, melhor volta, pneu) e guarda o historico: contra quem ja corrias, tags e notas por piloto.
+
+INSTALAR (1a vez)
+Duplo clique em instalar.bat. Ele verifica o .NET 10 (instala-o com o winget se faltar), instala o programa em
+%LocalAppData%\ZukaRivals e cria o atalho "Zuka Rivals" na Area de Trabalho e no Menu Iniciar.
+Depois disso podes apagar a pasta que descarregaste. Para atualizar, corre o instalar.bat da versao nova.
+Nao precisa de desativar nada no Windows. (executar.bat serve so para correr direto da pasta, sem instalar.)
+
+USO DIARIO
+  - Ctrl+Alt+O  mostra/oculta o painel.   Ctrl+Alt+C  liga/desliga o click-through (o rato passa para o jogo).
+    Os atalhos podem ser mudados em Definicoes > Comportamento.
+  - Clica num piloto: historico, notas e tags. Botao direito: pôr tags rapidamente.
+  - Modos automaticos: CORRIDA (posicao ao vivo, gap), QUALIFICACAO e TREINO (melhor volta; roxo = melhor da classe).
+  - Filtros (rodape): pesquisa, historico, tag, classe.
+  - SOF no canto: forca media do grid (e da tua classe, se houver varias).
+
+HISTORICO
+  - So grava encontros em corridas OFICIAIS. Treinos e corridas nao oficiais nao contam.
+  - Fica em %AppData%\iRacingTracker\tracker.db (tags, notas, encontros).
+
+BACKUPS (Definicoes > Dados)
+  - Automatico: uma copia por dia ao abrir o programa; guarda as 10 ultimas (pasta de backups).
+  - "Cópia extra": escolhe uma pasta (ex.: OneDrive). Cada backup tambem la e copiado, para sobreviver a uma
+    reinstalacao do Windows.
+  - Exportar / Importar: para levar o historico para outro computador. Importar substitui o atual
+    (e cria antes uma copia do que tinhas). Faz isto fora das corridas.
+
+IDIOMAS
+Definicoes > Aparencia > Idioma: Portugues, English, Espanol, Francais (muda na hora).
+
+SE ALGO CORRER MAL
+Erros ficam em %AppData%\iRacingTracker\erro.log. As definicoes estao em settings.json na mesma pasta.
+
+LIMITES CONHECIDOS
+  - Nomes de pneus em corridas com varias classes ainda por validar (aparece * quando e uma estimativa).
+  - Espanhol e frances nao revistos por falantes nativos.
+
+PESQUISAR NO HISTORICO
+Botao "Historico" no rodape: lista os ultimos pilotos vistos e procura por nome ou Customer ID. Clica num piloto
+para pores tags e notas, mesmo que ja tenha saido da sessao.
+
+TEMAS E CORES (Definicoes > Aparencia)
+  - 5 temas: Pit Wall, Cartoes, Torre, HUD, Telemetria. Mudam a janela toda (linhas, botoes, paineis, cabecalho).
+  - Cor de destaque, cor de fundo e cor do cabecalho podem ser mudadas por cima de qualquer tema
+    (o botao ↺ volta a cor do tema). A cor de destaque tambem pinta os botoes ativos e a etiqueta do modo.
+  - Licenca: uma so pilula com a letra e o SR, na cor da categoria.
+
+HISTORICO DE DESENVOLVIMENTO (notas das versoes de teste; a versao final e a 1.0)
+Teste 1.1
+  - MODO DISCRETO: a setinha no canto inferior direito esconde a barra de baixo (Filtros, Historico, Definicoes, Sair)
+    e os paineis abertos. Clica outra vez para voltar. Fica guardado para a proxima vez.
+  - ARRANCAR COM O WINDOWS + "Mostrar so com o iRacing ligado" (Definicoes > Comportamento): o programa arranca com o
+    Windows, fica escondido e aparece sozinho quando o iRacing abre. Nunca abre duas copias.
+
+Teste 1.1.1
+  - PNEUS: icone novo, um pneu visto de lado com a cor do tipo: duro/seco = branco, medio = amarelo,
+    macio = vermelho, intermedio = verde, chuva = azul. Nome desconhecido = cinzento.
+    O asterisco desapareceu.
+
+Teste 1.4
+- Coluna do piloto mais estreita (sobra espaco para iRating, voltas, etc.); nomes longos abreviam o primeiro nome (C. Raphose).
+- Definicoes > Aparencia: cor de destaque e cor de fundo personalizadas (por cima de qualquer tema; o botao ↺ volta a cor do tema).
+
+Teste 1.3
+- Os temas agora mudam o programa todo: botoes, rodape, paineis (filtros, historico, definicoes, detalhe), campos de texto, cabecalho, etiqueta do modo (CORRIDA) e cantos da janela, alem das linhas.
+
+Teste 1.2.1
+- Filtros e Historico: abrem so ao clicar no rodape, nunca os dois juntos, com botao ✕ para fechar; a janela cresce sozinha ate 440 se estiver pequena e a lista encolhe, para o rodape nao desaparecer.
+
+Teste 1.2
+- 5 temas em Definicoes > Aparencia > Tema (muda na hora, fica guardado):
+  Pit Wall (ambar, sobrio), Cartoes (cantos redondos), Torre (estilo TV, so Gap+Pneu,
+  cabecalho vermelho escuro), HUD (fundo quase transparente, so iRating/Licenca/Gap),
+  Telemetria (denso, verde-agua, cantos retos).
+- Tags aparecem em todos os temas.
+- Clicar num tema ajusta a largura da janela para esse tema; depois podes redimensionar.
+- Bandeiras: Portugal com brasao dourado, EUA com estrelas, Espanha com escudo,
+  Brasil com faixa, Canada com folha.
+
+Teste 1.1.3
+  - Menos piscar na lista: entrar/sair dos
+    boxes ou da sessao so mexe na lista depois de 1-2 s estavel; quem entra sem posicao fica no fim, nao no topo.
+  - NOMES COM OUTROS ALFABETOS (ex.: russo): o iRacing so entrega "??????" quando o Windows nao tem esse alfabeto;
+    nesse caso o painel usa o apelido abreviado que o iRacing entrega em UTF-8 (ex.: "Самсонов"); se nem esse existir,
+    mostra "ID 123456 (nome ilegivel)".
