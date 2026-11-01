@@ -1,38 +1,38 @@
-# Seguranca e antivirus
+# Security and antivirus
 
-## O que o Zuka Rivals faz (e nao faz)
-- Le a **memoria partilhada do iRacing** (so leitura) e o YAML da sessao.
-- Guarda historico, tags e notas num ficheiro SQLite local em `%AppData%\iRacingTracker`.
-- **Nao tem rede.** Nao liga a nenhum servidor, nao envia nem descarrega nada.
-- **Nao tem `.exe` nem `.dll` no repositorio.** E codigo-fonte; o `ZukaRivals.exe` e o instalador sao compilados pelo GitHub Actions a partir deste codigo (`.github/workflows/instalador.yml`).
-- **Nao usa PowerShell escondido, tarefas agendadas, servicos nem hooks de teclado.**
-- Unica persistencia: uma entrada opcional em `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, ligada pela caixa
-  "Arrancar com o Windows" nas Definicoes. Desmarcar remove-a.
-- Atalhos globais: apenas `RegisterHotKey` (mostrar/ocultar e click-through), configuraveis.
+## What Zuka Rivals does (and does not do)
+- Reads **iRacing's shared memory** (read-only) and the session YAML.
+- Stores history, tags and notes in a local SQLite file in `%AppData%\iRacingTracker`.
+- **Has no network code.** It never connects to a server and never uploads or downloads anything.
+- **Has no `.exe` or `.dll` committed to the repository.** The `ZukaRivals.exe` and the installer are built by GitHub Actions from this source (`.github/workflows/instalador.yml`).
+- **Does not use hidden PowerShell, scheduled tasks, services or keyboard hooks.** No `.bat`, `.vbs` or `.ps1` scripts ship with the product.
+- Only persistence: an optional entry in `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, enabled by the
+  "Start with Windows" checkbox in Settings. Unchecking it removes the entry, and so does uninstalling.
+- Global shortcuts use only `RegisterHotKey` (show/hide and click-through), and can be changed.
 
-## Porque pode haver alertas de antivirus
-Programas novos e sem reputacao podem receber um aviso do SmartScreen ou um falso positivo heuristico. Para reduzir:
-1. O executavel e o instalador sao gerados em publico pelo GitHub a partir do codigo-fonte, sem ofuscacao, sem scripts `.bat`, PowerShell nem VBS.
-2. Cada release tem a soma **SHA-256** em `SHA256.txt`, e o fluxo corre uma analise do Windows Defender ao instalador.
-3. Antes de descarregar, podes enviar o ZIP ao [VirusTotal](https://www.virustotal.com) e comparar.
-4. Podes ler todo o codigo: nada esta ofuscado.
+## Why an antivirus warning may appear
+New programs without reputation can trigger SmartScreen or a heuristic false positive. To reduce this:
+1. The executable and installer are built in public by GitHub from the source, without obfuscation.
+2. Every release ships a **SHA-256** checksum in `SHA256.txt`, and the workflow runs a Windows Defender scan on the installer.
+3. You can upload the installer to [VirusTotal](https://www.virustotal.com) and compare.
+4. All the code is readable: nothing is obfuscated.
 
-## Falso positivo
-Se o teu antivirus marcar o programa, abre uma issue com o nome do antivirus e da detecao. O autor reporta-o ao
-fornecedor (Microsoft Defender: https://www.microsoft.com/wdsi/filesubmission).
+## Code signing (SmartScreen)
+The installer is **not signed**. Without a signature, SmartScreen shows "Unknown publisher", and on PCs with Smart App
+Control enabled Windows may block the `.exe` with no "run anyway" option. Options:
+- **Microsoft Store (MSIX package):** Microsoft signs it, no warning; free registration for individuals, but the app goes
+  through certification and store rules.
+- **Code-signing certificate (OV):** roughly EUR 150-300 per year. Even signed, the warning only disappears as the
+  publisher builds reputation. The workflow already supports signing: store `SIGN_PFX_BASE64` and `SIGN_PFX_PASSWORD` as repository secrets.
+- **Azure Artifact Signing:** roughly USD 10/month, but individuals are only supported in the USA and Canada.
 
-## Verificacao automatica
-`scripts/verificar.sh` procura padroes que costumam disparar antivirus (rede, codigo dinamico, hooks, PowerShell
-escondido, binarios) e corre em cada push. O agente `.claude/agents/revisor-zuka-rivals.md` faz uma revisao mais funda.
+## False positives
+If your antivirus flags the program, open an issue with the antivirus name and the detection. The maintainer will report it to the
+vendor (Microsoft Defender: https://www.microsoft.com/wdsi/filesubmission).
 
-## Reportar uma vulnerabilidade
-Abre uma issue privada (Security > Report a vulnerability) ou contacta o autor.
+## Automatic checks
+`scripts/verificar.sh` looks for patterns that commonly trigger antivirus engines (network, dynamic code, hooks, hidden
+PowerShell, binaries) and runs on every push. The agent in `.claude/agents/revisor-zuka-rivals.md` does a deeper review.
 
-## Assinatura digital (SmartScreen)
-O instalador **nao esta assinado**. Sem assinatura, o SmartScreen mostra "editor desconhecido" e, em PCs com o Controlo
-Inteligente de Aplicacoes ligado, o Windows pode bloquear o `.exe` sem opcao de executar mesmo assim. Opcoes:
-- **Microsoft Store (pacote MSIX):** a Microsoft assina e nao ha alerta; registo gratuito para particulares, mas o
-  programa passa por certificacao e regras da loja.
-- **Certificado de assinatura (OV):** cerca de 150-300 EUR por ano. Mesmo assinado, o aviso so desaparece quando o
-  editor ganha reputacao. O fluxo ja suporta assinar: guarda `SIGN_PFX_BASE64` e `SIGN_PFX_PASSWORD` como segredos.
-- **Azure Artifact Signing:** cerca de 10 USD/mes, mas so para particulares nos EUA e Canada.
+## Reporting a vulnerability
+Use GitHub's private reporting (Security > Report a vulnerability) or contact the author.
