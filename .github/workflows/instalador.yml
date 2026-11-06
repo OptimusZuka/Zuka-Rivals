@@ -32,27 +32,47 @@ jobs:
       - name: Instalar Inno Setup
         run: choco install innosetup -y --no-progress
 
-      - name: Criar instalador
-        shell: pwsh
-        run: |
-          $v = "${{ github.ref_name }}".TrimStart('v')
-          if (-not $v -or $v -eq 'main') { $v = '1.0.0' }
-          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "installer\ZukaRivals.iss" "/DAppVersion=$v"
-
-      # Assinatura Authenticode: so corre se guardares o certificado como segredos do repositorio
-      # (SIGN_PFX_BASE64 e SIGN_PFX_PASSWORD). Sem certificado, este passo e ignorado e o instalador fica sem assinatura.
-      - name: Assinar (opcional)
+      # Assinatura Authenticode (opcional): so corre se o certificado existir como segredos do repositorio
+      # (SIGN_PFX_BASE64 e SIGN_PFX_PASSWORD). Ordem correta: primeiro o ZukaRivals.exe, depois o instalador,
+      # o desinstalador e o executavel temporario do instalador (o Inno Setup assina-os com o mesmo certificado).
+      - name: Assinar o executavel principal (opcional)
         if: ${{ env.SIGN_PFX_BASE64 != '' }}
         shell: pwsh
         env:
           SIGN_PFX_PASSWORD: ${{ secrets.SIGN_PFX_PASSWORD }}
         run: |
-          [IO.File]::WriteAllBytes("cert.pfx", [Convert]::FromBase64String($env:SIGN_PFX_BASE64))
+          [IO.File]::WriteAllBytes("$PWD\cert.pfx", [Convert]::FromBase64String($env:SIGN_PFX_BASE64))
           $signtool = (Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\*\x64\signtool.exe" | Sort-Object FullName | Select-Object -Last 1).FullName
-          Get-ChildItem Output\*.exe, publish\ZukaRivals.exe | ForEach-Object {
-            & $signtool sign /f cert.pfx /p $env:SIGN_PFX_PASSWORD /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 $_.FullName
+          "SIGNTOOL=$signtool" | Out-File -Append -Encoding utf8 $env:GITHUB_ENV
+          & $signtool sign /f cert.pfx /p $env:SIGN_PFX_PASSWORD /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 publish\ZukaRivals.exe
+          if ($LASTEXITCODE -ne 0) { throw "Falha a assinar ZukaRivals.exe" }
+
+      - name: Criar instalador
+        shell: pwsh
+        env:
+          SIGN_PFX_PASSWORD: ${{ secrets.SIGN_PFX_PASSWORD }}
+        run: |
+          $v = "${{ github.ref_name }}".TrimStart('v')
+          if (-not $v -or $v -eq 'main') { $v = '1.0.0' }
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if ($env:SIGN_PFX_BASE64 -ne '' -and $env:SIGNTOOL) {
+            $cmd = '"' + $env:SIGNTOOL + '" sign /f "' + "$PWD\cert.pfx" + '" /p "' + $env:SIGN_PFX_PASSWORD + '" /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 $f'
+            & $iscc "installer\ZukaRivals.iss" "/DAppVersion=$v" "/DSign=1" "/Szuka=$cmd"
+          } else {
+            & $iscc "installer\ZukaRivals.iss" "/DAppVersion=$v"
           }
-          Remove-Item cert.pfx
+          if ($LASTEXITCODE -ne 0) { throw "Falha a criar o instalador" }
+
+      - name: Verificar assinaturas
+        shell: pwsh
+        run: |
+          Get-ChildItem Output\*.exe, publish\ZukaRivals.exe | ForEach-Object {
+            $sig = Get-AuthenticodeSignature $_.FullName
+            Write-Host ("{0}: {1} {2}" -f $_.Name, $sig.Status, $sig.SignerCertificate.Subject)
+            if ($env:SIGN_PFX_BASE64 -ne '' -and $sig.Status -ne 'Valid') { throw "Assinatura invalida em $($_.Name)" }
+          }
+          if ($env:SIGN_PFX_BASE64 -eq '') { Write-Host "AVISO: sem certificado, os executaveis NAO estao assinados." }
+          Remove-Item cert.pfx -ErrorAction SilentlyContinue
 
       - name: Analise do Windows Defender
         shell: pwsh

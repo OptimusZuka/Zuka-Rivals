@@ -7,6 +7,10 @@
 #define AppExe  "ZukaRivals.exe"
 
 [Setup]
+#ifdef Sign
+SignTool=zuka
+SignedUninstaller=yes
+#endif
 AppId={{6B0C7B7E-4C1D-4F7B-9C55-5A2E7D1A9F10}
 AppName={#AppName}
 AppVersion={#AppVersion}
