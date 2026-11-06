@@ -13,7 +13,7 @@
   <img alt=".NET" src="https://img.shields.io/badge/.NET-10%20(WPF)-512BD4?style=flat-square">
   <img alt="Network" src="https://img.shields.io/badge/network-none-3FB950?style=flat-square">
   <img alt="Languages" src="https://img.shields.io/badge/languages-PT%20%7C%20EN%20%7C%20ES%20%7C%20FR-F2B705?style=flat-square">
-  <img alt="Status" src="https://img.shields.io/badge/status-v1.0-FFD60A?style=flat-square">
+  <img alt="Status" src="https://img.shields.io/badge/status-v1.1-FFD60A?style=flat-square">
 </p>
 
 <p align="center">
