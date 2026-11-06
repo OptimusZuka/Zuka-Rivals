@@ -76,6 +76,8 @@ The installer includes everything the program needs (the .NET runtime included),
 
 The installer is **not code-signed yet**. Code-signing certificates are paid, and this is a free hobby project, so Windows may show **"Windows protected your PC"** or **"Unknown publisher"** the first time. If that happens, choose **More info > Run anyway**.
 
+**Windows 11 Smart App Control.** If Smart App Control is on, Windows can block an unsigned installer outright ("Error 4551: an Application Control policy has blocked this file") and there is no "Run anyway" button. This is a limit of unsigned software, not a fault in the program. The fix is a code-signing certificate (being looked into, including free signing for open-source projects). Until then, the program cannot run on PCs where Smart App Control or a company policy blocks unsigned apps, unless that protection is changed by the user.
+
 I understand that is not ideal, so here is how you can verify what you are installing:
 
 - Everything is **open source**. The `.exe` and the installer are built in public by GitHub Actions from this code, with no obfuscation. See [`.github/workflows/instalador.yml`](.github/workflows/instalador.yml).
