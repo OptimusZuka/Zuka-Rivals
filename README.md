@@ -123,6 +123,10 @@ Ideas for future versions (no promises):
 
 Bug reports, screenshots and suggestions are welcome through [Issues](../../issues). If you open a pull request, please keep the project dependency-free and network-free.
 
+## License
+
+Released under the [MIT License](LICENSE).
+
 ## Disclaimer
 
 Zuka Rivals is an independent, community project. It is **not affiliated with, endorsed by or sponsored by iRacing.com Motorsport Simulations**. *iRacing* is a trademark of its respective owner. The program only reads data that the simulator itself exposes locally, and does not modify the game in any way.
