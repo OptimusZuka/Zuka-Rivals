@@ -65,10 +65,18 @@ jobs:
             if ($LASTEXITCODE -eq 2) { throw "O Defender detetou algo em $($_.Name)" }
           }
 
+      - name: Pacote portatil (zip, sem instalador)
+        shell: pwsh
+        run: |
+          $v = "${{ github.ref_name }}".TrimStart('v')
+          if (-not $v -or $v -eq 'main') { $v = '1.0.0' }
+          Copy-Item LEIA-ME.txt publish\LEIA-ME.txt
+          Compress-Archive -Path publish\* -DestinationPath "Output\ZukaRivals-$v-portatil.zip"
+
       - name: Somas SHA-256
         shell: pwsh
         run: |
-          Get-FileHash Output\*.exe -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $(Split-Path $_.Path -Leaf)" } | Tee-Object -FilePath Output\SHA256.txt
+          Get-FileHash Output\*.exe, Output\*.zip -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $(Split-Path $_.Path -Leaf)" } | Tee-Object -FilePath Output\SHA256.txt
 
       - uses: actions/upload-artifact@v4
         with:
